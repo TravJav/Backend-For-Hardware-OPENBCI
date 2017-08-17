@@ -8,6 +8,10 @@ server = require('http').createServer(app)
 var io = require('socket.io')(server)
 //const socket = io("");
 
+Bluetooth. bluetoothData();
+let BoardData = Bluetooth.GanglionData;
+Bluetooth.ChannelSize;
+
 
 io.on('connection', socket=>{
     console.log('socket has been connected')
@@ -15,7 +19,8 @@ io.on('connection', socket=>{
         // input_data();
 
         for (let i = 0; i < Bluetooth.ChannelSize; i++) {
-       // io.emit('arraytransfer', {BoardData:[i]})
+     //  io.emit('arraytransfer', {BoardData:[i]})
+     io.emit("arraytransfer",{BoardData:JSON.stringify(BoardData)})
         console.log(BoardData);
         }
 
@@ -42,7 +47,7 @@ this.bluetooth_stream = bluetooth_stream;
 Pass in the data to function
 */
 
-
+/*
 function input_data() {
 
 
@@ -51,13 +56,13 @@ Bluetooth. bluetoothData();
 let BoardData = Bluetooth.GanglionData;
 Bluetooth.ChannelSize;
 
-}
+//}
 
 
 // input_data();
 
 
-
+*/
     
    
 
