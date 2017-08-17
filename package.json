@@ -12,6 +12,7 @@
     "d3": "^4.10.0",
     "express": "^4.15.4",
     "http": "0.0.0",
-    "openbci-ganglion": "^0.4.3"
+    "openbci-ganglion": "^0.4.3",
+    "socket.io": "^2.0.3"
   }
 }

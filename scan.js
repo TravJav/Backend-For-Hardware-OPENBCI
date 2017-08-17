@@ -5,6 +5,17 @@
 
 const Ganglion = require('openbci-ganglion').Ganglion;
 const ganglion = new  Ganglion();
+
+
+
+
+
+
+let GanglionChannels = ganglion.numberOfChannels();
+
+
+
+
 /*================================================================================================================================================================================
 =============================================================================================================================================================================================================================
 This function will take in the RAW EEG, EMG, ECG data and send the Array with 4 objects inside ( Microvolts) to the 
@@ -23,6 +34,9 @@ console.log(sample.sampleNumber);
 for (let i = 0; i < ganglion.numberOfChannels(); i++) {
 // Where the microvolts will be outputed
   console.log("Channel " + (i + 1) + ": " + sample.channelData[i].toFixed(8) + " Volts.");
+
+  let GanglionObjects = sample.channelData[i].toFixed(8);
+
 }
 });
 
@@ -45,7 +59,9 @@ ganglion.searchStart();
 
 module.exports = {
 
-  bluetoothData : bluetooth_stream
+  bluetoothData : bluetooth_stream,
+  GanglionData : GanglionObjects,
+  ChannelSize: GanglionChannels  
 
 
 }
