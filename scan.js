@@ -12,13 +12,13 @@ const ganglion = new  Ganglion();
 
 
 server.listen(8080, ()=>{
-  console.log('Listening For  Client COnnection');
+  console.log('Listening For  Client Connection');
 });
 
 io.on('connection', socket=>{
   console.log("\n Client has connected to our server");
-ganglion.searchStart();
-
+   ganglion.searchStart();
+console.log("I have finished searching");
   });
 
   
@@ -30,50 +30,42 @@ read.js class
 =============================================================================================================================================================================================================================
 ==============================================================================================================================================================================*/
 
-
-
-
-
-
-
-
-    ganglion.once('ganglionFound', (peripheral) => {
-    // Stop searching for BLE devices once a ganglion is found.
-    ganglion.searchStop();
-    ganglion.on('sample', (sample) => {
-    /** Work with sample */
-    console.log(sample.sampleNumber);
+ganglion.once('ganglionFound', (peripheral) => {
+// Stop searching for BLE devices once a ganglion is found.
+ganglion.searchStop();
+ganglion.on('sample', (sample) => {
+/** Work with sample */
+console.log(sample.sampleNumber);
+  const transferdata = [];
     for (let i = 0; i < ganglion.numberOfChannels(); i++) {
-    // Where the microvolts will be outputed
-      console.log("Channel " + (i + 1) + ": " + sample.channelData[i].toFixed(8) + " Volts.");
-    
-     GanglionObjects = sample.channelData[i].toFixed(8);
-     pass_data(GanglionObjects);
+        // Where the microvolts will be outputed
+         // console.log("Channel " + (i + 1) + ": " + sample.channelData[i].toFixed(8) + " Volts.");
+        //push sample.channelData[i].toFixed(8) into our transferdata array
+        GanglionObjects = sample.channelData[i].toFixed(8);
+        transferdata.push(GanglionObjects);
+
+
     }
+
+    pass_data(transferdata);
+
     });
 
-    ganglion.once('ready', () => {
-      ganglion.streamStart();
-    });
-    ganglion.connect(peripheral);
+ganglion.once('ready', () => {
+ganglion.streamStart();
+});
+ganglion.connect(peripheral);
 
-  });
-
-
-  
-
-  
-  
+});
+ 
 /*
 Function to actually pass the data from the socket to the front end
 
 */
+function pass_data(transferdata){
 
-
-function pass_data(GanglionObjects){
-
-console.log('socket has been connected');
-io.emit("arraytransfer",GanglionObjects);
+console.log(transferdata);
+io.emit("arraytransfer", transferdata);
 
 }
 
