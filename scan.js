@@ -1,5 +1,5 @@
 
-
+const _ = require('lodash');
 const Bluetooth = require('./scan.js');
 const express = require('express'),
 app = express(),
@@ -29,13 +29,20 @@ read.js class
 =============================================================================================================================================================================================================================
 ==============================================================================================================================================================================*/
 
+
+
+
 ganglion.once('ganglionFound', (peripheral) => {
 // Stop searching for BLE devices once a ganglion is found.
 ganglion.searchStop();
-ganglion.on('sample', (sample) => {
+
+
+
+ganglion.on('sample', _.throttle(sample => {
 /** Work with sample */
 console.log(sample.sampleNumber);
-  const transferdata = [];
+  
+const transferdata = [];
     for (let i = 0; i < ganglion.numberOfChannels(); i++) {
         // Where the microvolts will be outputed
          // console.log("Channel " + (i + 1) + ": " + sample.channelData[i].toFixed(8) + " Volts.");
@@ -43,12 +50,16 @@ console.log(sample.sampleNumber);
         GanglionObjects = sample.channelData[i].toFixed(8);
         transferdata.push(GanglionObjects);
 
-
     }
 
-    pass_data(transferdata);
+    pass_data(transferdata);    
+    }, 500, {leading:true}))
+    
 
-    });
+
+
+
+
 
 ganglion.once('ready', () => {
 ganglion.streamStart();
