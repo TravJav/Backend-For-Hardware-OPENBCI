@@ -28,54 +28,48 @@ read.js class
 
 =============================================================================================================================================================================================================================
 ==============================================================================================================================================================================*/
-
-
-
-
 ganglion.once('ganglionFound', (peripheral) => {
 // Stop searching for BLE devices once a ganglion is found.
 ganglion.searchStop();
 
 
+/*
+Use throttle to control the sample rate
 
+*/
 ganglion.on('sample', _.throttle(sample => {
 /** Work with sample */
 console.log(sample.sampleNumber);
   
 const transferdata = [];
     for (let i = 0; i < ganglion.numberOfChannels(); i++) {
-        // Where the microvolts will be outputed
-         // console.log("Channel " + (i + 1) + ": " + sample.channelData[i].toFixed(8) + " Volts.");
-        //push sample.channelData[i].toFixed(8) into our transferdata array
         GanglionObjects = sample.channelData[i].toFixed(8);
         transferdata.push(GanglionObjects);
 
     }
 
     pass_data(transferdata);    
-    }, 500, {leading:true}))
+  }, 500, {leading:true}))
     
 
 
 
-
-
-
 ganglion.once('ready', () => {
-ganglion.streamStart();
-});
-ganglion.connect(peripheral);
+  ganglion.streamStart();
+  });
+
+  ganglion.connect(peripheral);
 
 });
  
 /*
-Function to actually pass the data from the socket to the front end
+Function to actually pass the data from the socket to the front end react
 
 */
 function pass_data(transferdata){
 
-console.log(transferdata);
-io.emit("arraytransfer", transferdata);
+  console.log(transferdata);
+  io.emit("arraytransfer", transferdata);
 
 }
 
