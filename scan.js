@@ -5,10 +5,12 @@ const express = require('express'),
 app = express(),
 server = require('http').createServer(app);
 var io = require('socket.io')(server);
+var geolocation = require('geolocation')
 // libs
 
 const Ganglion = require('openbci-ganglion').Ganglion;
 const ganglion = new  Ganglion();
+
 
 
 server.listen(8080, ()=>{
@@ -39,17 +41,17 @@ Use throttle to control the sample rate
 */
 ganglion.on('sample', _.throttle(sample => {
 /** Work with sample */
-console.log(sample.sampleNumber);
-  
+
+
 const transferdata = [];
     for (let i = 0; i < ganglion.numberOfChannels(); i++) {
         GanglionObjects = sample.channelData[i].toFixed(8);
         transferdata.push(GanglionObjects);
-
+       
     }
 
     pass_data(transferdata);    
-  }, 500, {leading:true}))
+  }, 200, {leading:true}))
     
 
 
@@ -68,8 +70,8 @@ Function to actually pass the data from the socket to the front end react
 */
 function pass_data(transferdata){
 
-  console.log(transferdata);
   io.emit("arraytransfer", transferdata);
 
 }
+
 
