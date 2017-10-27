@@ -11,66 +11,61 @@ var geolocation = require('geolocation')
 const Ganglion = require('openbci-ganglion').Ganglion;
 const ganglion = new  Ganglion();
 
+var find_device = ganglion.once('ganglionFound'(peripheral));
+
+
 
 
 server.listen(8080, ()=>{
   console.log('Listening For  Client Connection');
 });
 
+
+
 io.on('connection', socket=>{
-  console.log("\n Client has connected to our server");
-   ganglion.searchStart();
+
+console.log("\n Client has connected to our server");
+ganglion.searchStart();
+find_device(); 
 console.log("I have finished searching");
-  });
-
-/*================================================================================================================================================================================
-=============================================================================================================================================================================================================================
-This function will take in the RAW EEG, EMG, ECG data and send the Array with 4 objects inside ( Microvolts) to the 
-read.js class 
-
-=============================================================================================================================================================================================================================
-==============================================================================================================================================================================*/
-ganglion.once('ganglionFound', (peripheral) => {
-// Stop searching for BLE devices once a ganglion is found.
-ganglion.searchStop();
 
 
-/*
-Use throttle to control the sample rate
+}
 
-*/
-ganglion.on('sample', _.throttle(sample => {
-/** Work with sample */
 
+
+
+function find_device(){
+
+  ganglion.searchStop();
+  ganglion.on('sample',(sample => {
 
 const transferdata = [];
-    for (let i = 0; i < ganglion.numberOfChannels(); i++) {
-        GanglionObjects = sample.channelData[i].toFixed(8);
-        transferdata.push(GanglionObjects);
-       
-    }
+for (let i = 0; i < ganglion.numberOfChannels(); i++) {
+    GanglionObjects = sample.channelData[i].toFixed(8);
+    transferdata.push(GanglionObjects);
+   
+}
 
-    pass_data(transferdata);    
-  }, 200, {leading:true}))
-    
+pass_data(transferdata);    
 
-
-
-ganglion.once('ready', () => {
+  ganglion.once('ready', () => {
   ganglion.streamStart();
   });
 
   ganglion.connect(peripheral);
 
-});
- 
-/*
-Function to actually pass the data from the socket to the front end react
+}));
 
-*/
-function pass_data(transferdata){
+}
 
-  io.emit("arraytransfer", transferdata);
+
+
+
+
+ function pass_data(transferdata){
+
+// transferdata);
 
 }
 

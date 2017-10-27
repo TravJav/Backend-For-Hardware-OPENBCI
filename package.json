@@ -16,6 +16,7 @@
     "http": "0.0.0",
     "loadash": "^1.0.0",
     "lodash": "^4.17.4",
+    "net-socket": "^1.1.0",
     "openbci-ganglion": "^0.4.3",
     "socket.io": "^2.0.3"
   }
